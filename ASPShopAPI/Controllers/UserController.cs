@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ASPShopAPI.Controllers
 {
-	[Route("api/[controller]")]
+	[Route("api/v1/[controller]/[action]")]
 	[ApiController]
 	public class UserController : ControllerBase
 	{
@@ -38,6 +38,41 @@ namespace ASPShopAPI.Controllers
 			_context.SaveChanges();
 
 			return new JsonResult(Ok(user));
+        }
+
+		// Get
+		[HttpGet]
+		public JsonResult Get(Guid id)
+		{
+			var result = _context.Users.Find(id);
+
+			if (result == null)
+				return new JsonResult(NotFound());
+
+			return new JsonResult(Ok(result));
+		}
+
+		// Delete
+		[HttpDelete]
+		public JsonResult Delete(Guid id)
+		{
+			var result = _context.Users.Find(id);
+
+			if (result == null)
+				return new JsonResult(NotFound());
+
+			_context.Users.Remove(result);
+			_context.SaveChanges();
+
+			return new JsonResult(NoContent());
+		}
+
+		// Get all
+		[HttpGet]
+		public JsonResult GetAll()
+		{
+			var result = _context.Users.ToList();
+            return new JsonResult(Ok(result));
         }
 	}
 }
