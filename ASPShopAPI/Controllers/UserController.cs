@@ -19,29 +19,33 @@ namespace ASPShopAPI.Controllers
 
 		// Create/Edit
 		[HttpPost]
-		public JsonResult CreateEdit(User user)
+		public JsonResult Create(User user)
 		{
-            if (user.Id.ToString() == null)
-            {
-				_context.Users.Add(user);
-            }
-            else
-            {
-				var userInDb = _context.Users.Find(user.Id);
+            _context.Users.Add(user);
 
-				if (userInDb == null)
-					return new JsonResult(NotFound());
-
-				userInDb = user;
-            }
-
-			_context.SaveChanges();
+            _context.SaveChanges();
 
 			return new JsonResult(Ok(user));
         }
 
-		// Get
-		[HttpGet]
+        // Edit
+        [HttpPut]
+        public JsonResult Edit(User user)
+        {
+            var userInDb = _context.Users.Find(user.Id);
+
+            if (userInDb == null)
+                return new JsonResult(NotFound());
+
+            userInDb = user;
+
+            _context.SaveChanges();
+
+            return new JsonResult(Ok(user));
+        }
+
+        // Get
+        [HttpGet]
 		public JsonResult Get(Guid id)
 		{
 			var result = _context.Users.Find(id);
