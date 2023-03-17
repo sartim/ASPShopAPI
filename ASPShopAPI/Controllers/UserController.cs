@@ -17,7 +17,7 @@ namespace ASPShopAPI.Controllers
 			_context = context;
 		}
 
-		// Create/Edit
+		// Create
 		[HttpPost]
 		public JsonResult Create(User user)
 		{
