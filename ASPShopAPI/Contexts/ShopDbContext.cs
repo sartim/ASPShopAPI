@@ -6,9 +6,9 @@ using Microsoft.EntityFrameworkCore;
 namespace ASPShopAPI.Data;
 
 
-public class UserDbContext: DbContext
+public class ShopDbContext: DbContext
 {
-	public UserDbContext(DbContextOptions options) : base(options)
+	public ShopDbContext(DbContextOptions options) : base(options)
 	{
 	}
 
