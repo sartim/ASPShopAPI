@@ -2,6 +2,11 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using ASPShopAPI.Controllers;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using ASPShopAPI.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace ASPShopAPI
 {
@@ -34,9 +39,15 @@ namespace ASPShopAPI
                     ValidateIssuerSigningKey = true,
                     ValidIssuer = "your_issuer",
                     ValidAudience = "your_audience",
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("your_secret_key"))
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes("your_secret_key"))
                 };
             });
+
+            //
+            services.AddDbContext<ShopDbContext>(options => options.UseInMemoryDatabase("UserDB"));
+            services.AddScoped(typeof(BaseController<>));
+            services.AddScoped<UserController>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
