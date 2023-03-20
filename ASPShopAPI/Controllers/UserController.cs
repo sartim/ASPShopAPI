@@ -18,17 +18,20 @@ namespace ASPShopAPI.Controllers
 		{
 			_context = context;
 		}
+        // Create
+        [HttpPost("users")]
+        public JsonResult Create(User user)
+        {
+            // hash the password before saving the user
+            user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
 
-		// Create
-		[HttpPost("users")]
-		public JsonResult Create(User user)
-		{
             _context.Users.Add(user);
 
             _context.SaveChanges();
 
-			return new JsonResult(Ok(user));
+            return new JsonResult(Ok(user));
         }
+
 
         // Edit
         [HttpPut("users/{id}")]
@@ -39,12 +42,20 @@ namespace ASPShopAPI.Controllers
             if (userInDb == null)
                 return new JsonResult(NotFound());
 
-            userInDb = user;
+            // update the user's password if it has been changed
+            if (user.Password != userInDb.Password)
+            {
+                userInDb.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
+            }
+
+            userInDb.FirstName = user.FirstName;
+            userInDb.Email = user.Email;
 
             _context.SaveChanges();
 
             return new JsonResult(Ok(user));
         }
+
 
         // Get
         [HttpGet("users/{id}")]
