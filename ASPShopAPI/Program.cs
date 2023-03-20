@@ -1,16 +1,46 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ASPShopAPI.Data;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<UserDbContext>(options => options.UseInMemoryDatabase("UserDB"));
+// Db connection here
+builder.Services.AddDbContext<ShopDbContext>(options => options.UseInMemoryDatabase("UserDB"));
+
+// Convert url structure to lower case
+builder.Services.AddRouting(options => options.LowercaseUrls = true);
+
+// Configure JWT authentication
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = "your_issuer",
+        ValidAudience = "your_audience",
+        IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes("your_secret_key"))
+    };
+});
+
+//services.AddScoped(typeof(BaseController<>));
+//services.AddScoped<UserController>();
 
 var app = builder.Build();
 
