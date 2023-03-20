@@ -6,23 +6,24 @@ using ASPShopAPI.Data;
 using ASPShopAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.EntityFrameworkCore;
 
 namespace ASPShopAPI.Controllers
 {
-    [Route("api/v1")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase
     {
         private readonly IConfiguration _config;
-        private readonly UserDbContext _context;
+        private readonly ShopDbContext _context;
 
-        public AuthController(IConfiguration config, UserDbContext context)
+        public AuthController(IConfiguration config, ShopDbContext context)
         {
             _config = config;
             _context = context;
         }
 
-        [HttpPost("auth/generate-jwt")]
+        [HttpPost("generate-jwt")]
         public JsonResult GenerateToken(Login login)
         {
             // find user by email
