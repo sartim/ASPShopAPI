@@ -1,12 +1,14 @@
 ﻿using System;
 using ASPShopAPI.Data;
 using ASPShopAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ASPShopAPI.Controllers
 {
-	[Route("api/v1/[controller]/[action]")]
+    [Authorize]
+    [Route("api/v1")]
 	[ApiController]
 	public class UserController : ControllerBase
 	{
@@ -18,7 +20,7 @@ namespace ASPShopAPI.Controllers
 		}
 
 		// Create
-		[HttpPost]
+		[HttpPost("users")]
 		public JsonResult Create(User user)
 		{
             _context.Users.Add(user);
@@ -29,7 +31,7 @@ namespace ASPShopAPI.Controllers
         }
 
         // Edit
-        [HttpPut]
+        [HttpPut("users/{id}")]
         public JsonResult Edit(User user)
         {
             var userInDb = _context.Users.Find(user.Id);
@@ -45,7 +47,7 @@ namespace ASPShopAPI.Controllers
         }
 
         // Get
-        [HttpGet]
+        [HttpGet("users/{id}")]
 		public JsonResult Get(Guid id)
 		{
 			var result = _context.Users.Find(id);
@@ -57,7 +59,7 @@ namespace ASPShopAPI.Controllers
 		}
 
 		// Delete
-		[HttpDelete]
+		[HttpDelete("users/{id}")]
 		public JsonResult Delete(Guid id)
 		{
 			var result = _context.Users.Find(id);
@@ -72,7 +74,7 @@ namespace ASPShopAPI.Controllers
 		}
 
 		// Get all
-		[HttpGet]
+		[HttpGet("users")]
 		public JsonResult GetAll()
 		{
 			var result = _context.Users.ToList();
