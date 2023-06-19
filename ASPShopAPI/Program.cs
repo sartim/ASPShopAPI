@@ -3,6 +3,10 @@ using ASPShopAPI.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using dotenv.net;
+
+// Load .env
+DotEnv.Load();
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,7 +18,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Db connection here
-builder.Services.AddDbContext<ShopDbContext>(options => options.UseInMemoryDatabase("UserDB"));
+string connectionString = Environment.GetEnvironmentVariable("DB_URL");
+builder.Services.AddDbContext<ShopDbContext>(options => options.UseNpgsql(connectionString));
+
 
 // Convert url structure to lower case
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
@@ -35,7 +41,7 @@ builder.Services.AddAuthentication(options =>
         ValidIssuer = "your_issuer",
         ValidAudience = "your_audience",
         IssuerSigningKey = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes("your_secret_key"))
+            Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("SECRET_KEY")))
     };
 });
 
