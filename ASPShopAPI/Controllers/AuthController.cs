@@ -39,7 +39,7 @@ namespace ASPShopAPI.Controllers
 
             // generate token
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_config["Jwt:SecretKey"]);
+            var key = Encoding.ASCII.GetBytes(Environment.GetEnvironmentVariable("SECRET_KEY"));
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
@@ -47,7 +47,7 @@ namespace ASPShopAPI.Controllers
             new Claim(ClaimTypes.Email, login.Email)
                 }),
                 Expires = DateTime.UtcNow.AddMinutes(
-                    int.Parse(_config["Jwt:ExpirationMinutes"])),
+                    int.Parse("5")),
                 SigningCredentials = new SigningCredentials(
                     new SymmetricSecurityKey(key),
                     SecurityAlgorithms.HmacSha256Signature)
