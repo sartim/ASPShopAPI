@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 using ASPShopAPI.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 

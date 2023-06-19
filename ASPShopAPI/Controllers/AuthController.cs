@@ -47,7 +47,7 @@ namespace ASPShopAPI.Controllers
             new Claim(ClaimTypes.Email, login.Email)
                 }),
                 Expires = DateTime.UtcNow.AddMinutes(
-                    int.Parse("5")),
+                    int.Parse("60")),
                 SigningCredentials = new SigningCredentials(
                     new SymmetricSecurityKey(key),
                     SecurityAlgorithms.HmacSha256Signature)
