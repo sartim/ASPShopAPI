@@ -8,7 +8,7 @@ namespace ASPShopAPI.Controllers
 {
     [Route("api/v1/[controller]")]
     [ApiController]
-    public class RoleController : BaseController<User>
+    public class RoleController : BaseController<Role>
     {
         public RoleController(ShopDbContext dbContext) : base(dbContext)
         {

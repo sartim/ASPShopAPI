@@ -1,10 +1,14 @@
 ﻿using System;
+using Microsoft.AspNetCore.Mvc;
+using ASPShopAPI.Models;
+using ASPShopAPI.Data;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ASPShopAPI.Models
 {
-    public class RolePermissions
+    public class RolePermission
     {
         [Key]
         public int Id { get; set; }

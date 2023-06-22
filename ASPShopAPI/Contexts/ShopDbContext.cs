@@ -15,6 +15,6 @@ public class ShopDbContext: DbContext
 	public DbSet<User> Users { get; set; }
     public DbSet<Role> Roles { get; set; }
     public DbSet<Permission> Permissions { get; set; }
-    public DbSet<RolePermissions> RolePermissions { get; set; }
+    public DbSet<RolePermission> RolePermission { get; set; }
 }
 
