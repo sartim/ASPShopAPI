@@ -59,7 +59,10 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseMiddleware<TokenAuthenticationMiddleware>();
+app.UseWhen(context => !context.Request.Path.StartsWithSegments("/api/v1/auth/generate-jwt"), appBuilder =>
+{
+    appBuilder.UseMiddleware<TokenAuthenticationMiddleware>();
+});
 
 app.UseAuthorization();
 
