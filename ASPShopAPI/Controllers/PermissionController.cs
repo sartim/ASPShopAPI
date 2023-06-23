@@ -8,7 +8,7 @@ namespace ASPShopAPI.Controllers
 {
     [Route("api/v1/[controller]")]
     [ApiController]
-    public class PermissionController : BaseController<User>
+    public class PermissionController : BaseController<Permission>
     {
         public PermissionController(ShopDbContext dbContext) : base(dbContext)
         {
