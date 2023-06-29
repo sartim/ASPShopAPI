@@ -14,12 +14,10 @@ namespace ASPShopAPI.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly IConfiguration _config;
         private readonly ShopDbContext _context;
 
-        public AuthController(IConfiguration config, ShopDbContext context)
+        public AuthController(ShopDbContext context)
         {
-            _config = config;
             _context = context;
         }
 
@@ -39,15 +37,14 @@ namespace ASPShopAPI.Controllers
 
             // generate token
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(Environment.GetEnvironmentVariable("SECRET_KEY"));
+            var key = Encoding.ASCII.GetBytes(Environment.GetEnvironmentVariable("JWT_SECRET_KEY"));
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
             new Claim(ClaimTypes.Email, login.Email)
                 }),
-                Expires = DateTime.UtcNow.AddMinutes(
-                    int.Parse("60")),
+                Expires = DateTime.UtcNow.AddMinutes(int.Parse(Environment.GetEnvironmentVariable("JWT_EXPIRY"))),
                 SigningCredentials = new SigningCredentials(
                     new SymmetricSecurityKey(key),
                     SecurityAlgorithms.HmacSha256Signature)
