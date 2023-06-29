@@ -38,8 +38,8 @@ builder.Services.AddAuthentication(options =>
         ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        ValidIssuer = "your_issuer",
-        ValidAudience = "your_audience",
+        ValidIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER"),
+        ValidAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE"),
         IssuerSigningKey = new SymmetricSecurityKey(
             Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("SECRET_KEY")))
     };
