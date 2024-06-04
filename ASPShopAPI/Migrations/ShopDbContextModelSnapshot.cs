@@ -28,11 +28,11 @@ namespace ASPShopAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<bool>("CreatedAt")
-                        .HasColumnType("boolean");
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
 
-                    b.Property<bool>("DeletedAt")
-                        .HasColumnType("boolean");
+                    b.Property<DateTime>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -45,8 +45,8 @@ namespace ASPShopAPI.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<bool>("UpdatedAt")
-                        .HasColumnType("boolean");
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
@@ -59,11 +59,11 @@ namespace ASPShopAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<bool>("CreatedAt")
-                        .HasColumnType("boolean");
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
 
-                    b.Property<bool>("DeletedAt")
-                        .HasColumnType("boolean");
+                    b.Property<DateTime>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -76,8 +76,8 @@ namespace ASPShopAPI.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<bool>("UpdatedAt")
-                        .HasColumnType("boolean");
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
@@ -113,11 +113,11 @@ namespace ASPShopAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<bool>("CreatedAt")
-                        .HasColumnType("boolean");
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
 
-                    b.Property<bool>("DeletedAt")
-                        .HasColumnType("boolean");
+                    b.Property<DateTime>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -130,6 +130,9 @@ namespace ASPShopAPI.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("text");
@@ -137,8 +140,8 @@ namespace ASPShopAPI.Migrations
                     b.Property<int>("Phone")
                         .HasColumnType("integer");
 
-                    b.Property<bool>("UpdatedAt")
-                        .HasColumnType("boolean");
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
