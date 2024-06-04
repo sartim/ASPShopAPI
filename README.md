@@ -4,9 +4,9 @@ REST API using ASP.NET C#
 
 ## Setup
 
-### Install migration tool
+### Install Entity Framework Core tools
 
-    $ dotnet tool install --global dotnet-e
+    $ dotnet tool install --global dotnet-ef
 
 ### Create migrations
 
@@ -16,3 +16,13 @@ REST API using ASP.NET C#
 ### Update database
 
     $ dotnet ef database update
+
+### Build
+
+    $ dotnet build
+
+### Run
+
+    $ dotnet run
+
+Aces the browser on `http://localhost:5070/swagger/index.html`
