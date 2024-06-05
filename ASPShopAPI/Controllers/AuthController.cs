@@ -37,30 +37,51 @@ namespace ASPShopAPI.Controllers
 
             // generate token
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(Environment.GetEnvironmentVariable("JWT_SECRET_KEY"));
+            var key = Encoding.ASCII.GetBytes(
+                Environment.GetEnvironmentVariable("JWT_SECRET_KEY"));
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-            new Claim(ClaimTypes.Email, login.Email)
+                    new Claim(ClaimTypes.Email, login.Email)
                 }),
-                Expires = DateTime.UtcNow.AddMinutes(int.Parse(Environment.GetEnvironmentVariable("JWT_EXPIRY"))),
+                Expires = DateTime.UtcNow.AddMinutes(
+                    int.Parse(Environment.GetEnvironmentVariable("JWT_EXPIRY"))),
                 SigningCredentials = new SigningCredentials(
                     new SymmetricSecurityKey(key),
                     SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
+            var roles = Array.Empty<string>();
 
-            return  new JsonResult(
-                Ok(new { Token = tokenHandler.WriteToken(token) }));
+            return new JsonResult(new
+            {
+                Token = tokenHandler.WriteToken(token),
+                User = new
+                {
+                    FirstName = user.FirstName,
+                    Email = user.Email,
+                    Roles = roles
+                }
+            })
+            { StatusCode = 401 };
         }
 
         private bool VerifyPassword(string password, string passwordHash)
         {
-            byte[] passwordHashBytes = Encoding.UTF8.GetBytes(passwordHash);
-            string hashedPassword = Encoding.UTF8.GetString(passwordHashBytes);
-            return BCrypt.Net.BCrypt.Verify(password, hashedPassword);
+            try
+            {
+                byte[] passwordHashBytes = Encoding.UTF8.GetBytes(passwordHash);
+                string hashedPassword = Encoding.UTF8.GetString(passwordHashBytes);
+                return BCrypt.Net.BCrypt.Verify(password, hashedPassword);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Exception occurred during password verification: " + ex.Message);
+                return false;
+            }
         }
+
     }
 }
 
