@@ -56,7 +56,8 @@ public class TokenAuthenticationMiddleware
 
         try
         {
-            ClaimsPrincipal claimsPrincipal = tokenHandler.ValidateToken(token, validationParameters, out SecurityToken validatedToken);
+            ClaimsPrincipal claimsPrincipal = tokenHandler.ValidateToken(
+                token, validationParameters, out SecurityToken validatedToken);
             return true;
         }
         catch (Exception)
