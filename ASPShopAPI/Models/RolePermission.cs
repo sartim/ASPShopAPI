@@ -19,8 +19,8 @@ namespace ASPShopAPI.Models
         [ForeignKey("Permission")]
         public Guid PermissionId { get; set; }
 
-        public Role Role { get; set; }
-        public Permission Permission { get; set; }
+        public required Role Role { get; set; }
+        public required Permission Permission { get; set; }
     }
 }
 
