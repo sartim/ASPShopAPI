@@ -23,6 +23,4 @@ REST API using ASP.NET C#
 
 ### Run
 
-    $ dotnet run
-
-Aces the browser on `http://localhost:5070/swagger/index.html`
+    $ dotnet watch run -- --logging:LogLevel:Default=Debug
