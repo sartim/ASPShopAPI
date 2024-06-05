@@ -64,6 +64,8 @@ app.UseWhen(context => !context.Request.Path.StartsWithSegments("/api/v1/auth/ge
     appBuilder.UseMiddleware<TokenAuthenticationMiddleware>();
 });
 
+app.UseHttpsRedirection();
+
 app.UseAuthorization();
 
 app.MapControllers();
