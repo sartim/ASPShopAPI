@@ -15,4 +15,4 @@ services:
     container_name: asp_shop_api
     ports:
       - "5070:5070"
-    command: dotnet run -- --logging:LogLevel:Default=Debug
+    command: dotnet ASPShopAPI.dll
