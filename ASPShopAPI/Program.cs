@@ -25,32 +25,41 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Db connection here
-string connectionString = Environment.GetEnvironmentVariable("DB_URL");
-builder.Services.AddDbContext<ShopDbContext>(options => options.UseNpgsql(connectionString));
+var connectionString = Environment.GetEnvironmentVariable("DB_URL");
+if (string.IsNullOrEmpty(connectionString))
+    throw new Exception("DB_URL environment variable is not set.");
 
+builder.Services.AddDbContext<ShopDbContext>(options => options.UseNpgsql(connectionString));
 
 // Convert url structure to lower case
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
-// Configure JWT authentication
+// JWT authentication setup
+var jwtSecret = Environment.GetEnvironmentVariable("JWT_SECRET_KEY") 
+                ?? throw new Exception("JWT_SECRET_KEY not set.");
+var jwtIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER") 
+                ?? throw new Exception("JWT_ISSUER not set.");
+var jwtAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE") 
+                  ?? throw new Exception("JWT_AUDIENCE not set.");
+
 builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(options =>
-{
-    options.TokenValidationParameters = new TokenValidationParameters
     {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        ValidIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER"),
-        ValidAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE"),
-        IssuerSigningKey = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_SECRET_KEY")))
-    };
-});
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = jwtIssuer,
+            ValidAudience = jwtAudience,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret))
+        };
+    });
 
 //services.AddScoped(typeof(BaseController<>));
 //services.AddScoped<UserController>();
