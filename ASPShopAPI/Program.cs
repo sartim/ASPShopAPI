@@ -25,7 +25,10 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Db connection here
-string connectionString = Environment.GetEnvironmentVariable("DB_URL");
+var connectionString = Environment.GetEnvironmentVariable("DB_URL");
+if (string.IsNullOrEmpty(connectionString))
+    throw new Exception("DB_URL environment variable is not set.");
+
 builder.Services.AddDbContext<ShopDbContext>(options => options.UseNpgsql(connectionString));
 
 
