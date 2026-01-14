@@ -9,7 +9,7 @@ RUN dotnet restore
 # copy everything else and build app
 COPY ASPShopAPI/. ./ASPShopAPI/
 WORKDIR /source/ASPShopAPI
-RUN dotnet build -c release -o /app
+RUN dotnet build -c Release -o /app
 
 # final stage/image
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
