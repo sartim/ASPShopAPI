@@ -10,6 +10,13 @@ DotEnv.Load();
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Set port for web server
+int port = Convert.ToInt32(Environment.GetEnvironmentVariable("PORT"));
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ListenAnyIP(port);
+});
+
 // Add services to the container.
 builder.Services.AddControllers();
 
@@ -59,10 +66,15 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseWhen(context => !context.Request.Path.StartsWithSegments("/api/v1/auth/generate-jwt"), appBuilder =>
+// Skips auth check
+app.UseWhen(context => 
+    !context.Request.Path.StartsWithSegments("/api/v1/auth/generate-jwt") &&
+    !context.Request.Path.StartsWithSegments("/api/v1/health"),
+appBuilder =>
 {
     appBuilder.UseMiddleware<TokenAuthenticationMiddleware>();
 });
+
 
 app.UseHttpsRedirection();
 
