@@ -3,6 +3,7 @@ using ASPShopAPI.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using ASPShopAPI.Models;
 using dotenv.net;
 
 // Load .env
@@ -84,6 +85,84 @@ appBuilder =>
     appBuilder.UseMiddleware<TokenAuthenticationMiddleware>();
 });
 
+if (args.Contains("--create-user"))
+{
+    using var scope = app.Services.CreateScope();
+    var db = scope.ServiceProvider.GetRequiredService<ShopDbContext>();
+
+    Console.WriteLine("=== Create Default User ===");
+
+    Console.Write("First Name: ");
+    string firstName = Console.ReadLine()!.Trim();
+
+    Console.Write("Last Name: ");
+    string lastName = Console.ReadLine()!.Trim();
+
+    Console.Write("Email: ");
+    string email = Console.ReadLine()!.Trim();
+
+    Console.Write("Phone: ");
+    int phone;
+    while (!int.TryParse(Console.ReadLine(), out phone))
+    {
+        Console.Write("Invalid number. Phone: ");
+    }
+
+    Console.Write("Password: ");
+    string password = ReadPassword();
+
+    // Check if user already exists
+    if (await db.Users.AnyAsync(u => u.Email == email))
+    {
+        Console.WriteLine("User with this email already exists.");
+    }
+    else
+    {
+        var user = new User
+        {
+            FirstName = firstName,
+            LastName = lastName,
+            Email = email,
+            Phone = phone,
+            Password = BCrypt.Net.BCrypt.HashPassword(password),
+            IsActive = true,
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow
+        };
+
+        db.Users.Add(user);
+        await db.SaveChangesAsync();
+
+        Console.WriteLine($"User created: {email}");
+    }
+
+    return; // exit after CLI run
+}
+
+// Helper: Hide password input
+static string ReadPassword()
+{
+    string password = "";
+    ConsoleKeyInfo key;
+
+    do
+    {
+        key = Console.ReadKey(intercept: true);
+        if (key.Key == ConsoleKey.Backspace && password.Length > 0)
+        {
+            password = password[..^1];
+            Console.Write("\b \b");
+        }
+        else if (!char.IsControl(key.KeyChar))
+        {
+            password += key.KeyChar;
+            Console.Write("*");
+        }
+    } while (key.Key != ConsoleKey.Enter);
+
+    Console.WriteLine();
+    return password;
+}
 
 app.UseHttpsRedirection();
 
