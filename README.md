@@ -1,39 +1,188 @@
-# ASP.NET Web API
+Here’s a **cleaned-up, more professional, and production-aware README** you can drop straight into the repo. I’ve kept it concise but added clarity, ordering, and a few best-practice notes based on what you’re actually running into (JWT, EF, Postgres, Docker).
 
-REST API using ASP.NET C#
+---
 
-## Setup
+# ASPShopAPI
 
-### Install Entity Framework Core tools
+A RESTful Web API built with **ASP.NET Core** and **Entity Framework Core**, using **PostgreSQL** as the database and **JWT-based authentication**.
 
-    $ dotnet tool install --global dotnet-ef
+---
 
-### Create migrations
+## Requirements
 
-    $ dotnet ef migrations add <name>
+* .NET SDK **8.0+**
+* PostgreSQL **14+**
+* Docker & Docker Compose (optional, for containerized setup)
 
+---
 
-### Update database
+## Project Setup
 
-    $ dotnet ef database update
+### 1. Install Entity Framework Core CLI
 
-### Build
+```bash
+dotnet tool install --global dotnet-ef
+```
 
-    $ dotnet build
+Verify installation:
 
-### Run
+```bash
+dotnet ef --version
+```
 
-    $ dotnet watch run -- --logging:LogLevel:Default=Debug
+---
 
-### .env.example
+### 2. Environment Variables
 
-    ENV=Development
-    PORT=5070
-    JWT_SECRET_KEY=YourSuperSecretKeyHere
-    JWT_ISSUER=your-issuer
-    JWT_AUDIENCE=your-audience
-    JWT_EXPIRY=300
-    POSTGRES_USER=shopuser
-    POSTGRES_PASSWORD=shoppassword
-    POSTGRES_DB=shopdb
-    DB_URL=Host=postgres;Port=5432;Database=shopdb;Username=shopuser;Password=shoppassword
+Create a `.env` file using the example below.
+
+#### `.env.example`
+
+```env
+ENV=Development
+PORT=5070
+
+# JWT
+JWT_SECRET_KEY=CHANGE_ME_TO_A_SECURE_32_BYTE_MIN_SECRET
+JWT_ISSUER=asp-shop-api
+JWT_AUDIENCE=asp-shop-client
+JWT_EXPIRY=300
+
+# Database
+POSTGRES_USER=shopuser
+POSTGRES_PASSWORD=shoppassword
+POSTGRES_DB=shopdb
+
+DB_URL=Host=postgres;Port=5432;Database=shopdb;Username=shopuser;Password=shoppassword
+```
+
+> ⚠️ **Important**
+>
+> * `JWT_SECRET_KEY` must be **at least 32 bytes (256 bits)** for HMAC-SHA256
+> * Generate one with:
+> ```bash
+>   openssl rand -base64 32
+>   ```
+> * Never commit `.env` files to version control
+
+---
+
+## Database Setup
+
+### 3. Create a Migration
+
+```bash
+dotnet ef migrations add <MigrationName>
+```
+
+Example:
+
+```bash
+dotnet ef migrations add InitialCreate
+```
+
+---
+
+### 4. Apply Migrations
+
+```bash
+dotnet ef database update
+```
+
+---
+
+## Running the Application
+
+### 5. Build the Project
+
+```bash
+dotnet build
+```
+
+---
+
+### 6. Run Locally (with Hot Reload)
+
+```bash
+dotnet watch run -- --logging:LogLevel:Default=Debug
+```
+
+The API will be available at:
+
+```
+http://localhost:5070
+```
+
+Swagger UI:
+
+```
+http://localhost:5070/swagger
+```
+
+---
+
+## Running with Docker
+
+### 7. Start the Application Using Docker Compose
+
+```bash
+docker compose up -d --build
+```
+
+This will:
+
+* Start PostgreSQL
+* Run database migrations
+* Launch the API container
+
+To stop containers:
+
+```bash
+docker compose down
+```
+
+---
+
+## Authentication
+
+* Authentication is handled using **JWT tokens**
+* Tokens are issued via the `/auth/token` endpoint
+* Protected endpoints require:
+
+```http
+Authorization: Bearer <JWT_TOKEN>
+```
+
+---
+
+## Development Notes
+
+* Passwords are hashed using **BCrypt**
+* Database access is handled via **Entity Framework Core**
+* Controllers inherit from a shared `BaseController<T>` for common CRUD operations
+
+---
+
+## Common Issues
+
+### JWT Key Error (`IDX10720`)
+
+If you see:
+
+```
+key size must be greater than 256 bits
+```
+
+Your `JWT_SECRET_KEY` is too short. Generate a new one:
+
+```bash
+openssl rand -base64 32
+```
+
+---
+
+## License
+
+[MIT](https://choosealicense.com/licenses/mit/)
+
+---
