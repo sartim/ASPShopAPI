@@ -1,7 +1,3 @@
-Here’s a **cleaned-up, more professional, and production-aware README** you can drop straight into the repo. I’ve kept it concise but added clarity, ordering, and a few best-practice notes based on what you’re actually running into (JWT, EF, Postgres, Docker).
-
----
-
 # ASPShopAPI
 
 A RESTful Web API built with **ASP.NET Core** and **Entity Framework Core**, using **PostgreSQL** as the database and **JWT-based authentication**.
