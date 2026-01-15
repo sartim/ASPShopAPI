@@ -1,19 +1,22 @@
-﻿FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+﻿# Build stage
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /source
 
-# copy csproj and restore as distinct layers
+# Copy csproj and restore
 COPY *.sln .
 COPY ASPShopAPI/*.csproj ./ASPShopAPI/
 RUN dotnet restore
 
-# copy everything else and build app
+# Copy source and build
 COPY ASPShopAPI/. ./ASPShopAPI/
 WORKDIR /source/ASPShopAPI
 RUN dotnet build -c Release -o /app
 
-# final stage/image
+# Runtime stage
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
+
+# Copy published app from build stage
 COPY --from=build /app ./
 
 EXPOSE 5070
