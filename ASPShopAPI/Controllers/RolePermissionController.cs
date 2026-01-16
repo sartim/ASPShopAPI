@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ASPShopAPI.Controllers
 {
-    [Route("api/v1/role-permission")]
+    [Route("api/v1/role-permissions")]
     [ApiController]
     public class RolePermissionController : BaseController<RolePermission>
     {

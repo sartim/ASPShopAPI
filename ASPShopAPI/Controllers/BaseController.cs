@@ -53,6 +53,20 @@ namespace ASPShopAPI.Controllers
         [HttpPost]
         public virtual async Task<ActionResult<TEntity>> Post(TEntity entity)
         {
+            // Convert all DateTime properties to UTC before saving
+            var dateTimeProps = entity.GetType()
+                .GetProperties()
+                .Where(p => p.PropertyType == typeof(DateTime));
+
+            foreach (var prop in dateTimeProps)
+            {
+                var value = (DateTime)prop.GetValue(entity);
+                if (value.Kind == DateTimeKind.Local)
+                {
+                    prop.SetValue(entity, value.ToUniversalTime());
+                }
+            }
+
             _dbContext.Set<TEntity>().Add(entity);
             await _dbContext.SaveChangesAsync();
 
@@ -69,9 +83,23 @@ namespace ASPShopAPI.Controllers
             {
                 return BadRequest();
             }
+            
+            // Convert all DateTime properties to UTC before saving
+            var dateTimeProps = entity.GetType()
+                .GetProperties()
+                .Where(p => p.PropertyType == typeof(DateTime));
+
+            foreach (var prop in dateTimeProps)
+            {
+                var value = (DateTime)prop.GetValue(entity);
+                if (value.Kind == DateTimeKind.Local)
+                {
+                    prop.SetValue(entity, value.ToUniversalTime());
+                }
+            }
 
             _dbContext.Entry(entity).State = EntityState.Modified;
-
+            
             try
             {
                 await _dbContext.SaveChangesAsync();

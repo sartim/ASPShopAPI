@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ASPShopAPI.Controllers
 {
-    [Route("api/v1/[controller]")]
+    [Route("api/v1/roles")]
     [ApiController]
     public class RoleController : BaseController<Role>
     {
